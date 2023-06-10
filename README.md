@@ -12,3 +12,7 @@ This system will have 2 interfaces:
 ### Requirements
 
 The project uses Laravel 10 and Bootstrap 5.3 with the dashboard example and Shop example template of bootstrap.
+
+#### Installation
+
+Clone the project and run seeders
