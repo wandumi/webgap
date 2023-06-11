@@ -23,11 +23,12 @@ Route::get('/', function () {
 /**
 * Backend Routes
  */
-Route::get('dashboard', function () {
-    return view('backend.index');
-});
+
 
 Route::prefix('admin')->group(function () {
+    Route::get('dashboard', function () {
+        return view('backend.dashboard');
+    });
     Route::resource("products", ProductController::class);
     Route::resource("links", LinkController::class);
     Route::resource("orders", OrderController::class);

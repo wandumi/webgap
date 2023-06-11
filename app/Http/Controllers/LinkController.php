@@ -5,15 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Link;
 use App\Http\Requests\StoreLinkRequest;
 use App\Http\Requests\UpdateLinkRequest;
+use App\Models\LinkProduct;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class LinkController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index($id)
+    public function index()
     {
-        $links = Link::where("user_id", $id)->get();
+        $userID = Auth::user();
+
+        $links = Link::where("user_id", 1)->get();
 
         return view("backend.links.index",compact('links'));
     }
@@ -31,7 +36,19 @@ class LinkController extends Controller
      */
     public function store(StoreLinkRequest $request)
     {
-        //
+        $link = Link::create([
+            'user_id' => $request->user()->id,
+            'code' => Str::random(6)
+        ]);
+
+        foreach ($request->input('products') as $product_id){
+            LinkProduct::create([
+                'link_id' => $link->id,
+                'product_id' => $product_id
+            ]);
+        }
+
+        return view('backend.links.index', compact('link'));
     }
 
     /**
