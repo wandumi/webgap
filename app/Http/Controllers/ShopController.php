@@ -3,19 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
+use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class ShopController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::paginate(12);
 
-        return view("backend.products.index", compact('products'));
+        return view("frontend.products.home", compact('products'));
     }
 
     /**
@@ -23,37 +22,37 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view("backend.create");
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductRequest $request)
+    public function store(Request $request)
     {
-
+        //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show(string $id)
     {
-        return $product;
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit(string $id)
     {
-        return $product;
+        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -61,11 +60,8 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(string $id)
     {
-        $product->delete();
-
-        return view("backend.index", 201);
+        //
     }
-
 }
