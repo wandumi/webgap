@@ -20,9 +20,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $products = Product::paginate(12);
-
-    return view('welcome', compact('products'));
+    return redirect('shop');
 });
 
 Auth::routes();

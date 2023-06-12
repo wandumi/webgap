@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use Illuminate\Http\RedirectResponse;
 
 class ProductController extends Controller
 {
@@ -13,7 +14,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::latest()->paginate(12);
 
         return view("backend.products.index", compact('products'));
     }
@@ -23,7 +24,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view("backend.create");
+        return view("backend.products.create");
     }
 
     /**
@@ -31,6 +32,23 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
+
+        if($request->hasFile('image')){
+
+            $product    = $request->image;
+            $fileName   = time() . $product->getClientOriginalName();
+            $product->move(public_path('products/'), $fileName );
+        }
+
+        Product::create([
+            'title'     => $request->title,
+            'price'     => $request->price,
+            'description' => $request->description,
+            'image'   => $fileName
+        ]);
+
+
+        return redirect()->back()->with('message','Successfully Submitted');
 
     }
 
@@ -47,7 +65,9 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return $product;
+        $product = Product::findOrFail($id);
+
+        return view('banner.edit', compact('product'));
     }
 
     /**
@@ -55,7 +75,36 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+//        $product = Product::findOrFail($id);
+
+        if($request->hasFile('image'))
+        {
+            if($product->image != null){
+
+                $savedImage = 'banners/'.$product->image;
+
+                if(File::exists($savedImage)) {
+                    File::delete($savedImage);
+                }
+
+                $pageImage      = $request->image;
+                $product         = time() . $pageImage->getClientOriginalName();
+                $pageImage->move(public_path('products/'), $product);
+            }
+
+            $product->update([
+                'image'    => $product,
+            ]);
+        }
+
+        Product::update([
+            'title'     => $request->title,
+            'price'     => $request->price,
+            'description' => $request->description
+        ]);
+
+
+        return back()->with("message","Successfully Updated");
     }
 
     /**
@@ -63,9 +112,19 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->delete();
+//        $banner = Banner::findOrFail($id);
 
-        return view("backend.index", 201);
+        $image  = public_path("banners/") .$product->image;
+
+        if(File::exists($image)) {
+            File::delete($image);
+        }
+
+        $image->delete();
+
+        return response()->json([
+            'success' => 'Record deleted successfully!'
+        ]);
     }
 
 }

@@ -6,7 +6,7 @@
             <h1 class="h2">Products</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group me-2">
-                    <button type="button" class="btn btn-sm btn-secondary">Add Product</button>
+                    <a href="{{ url('admin/products/create') }}" class="btn btn-sm btn-secondary">Add Product</a>
                 </div>
 
             </div>
@@ -30,9 +30,18 @@
                 <tr>
                     <td>{{ $product->id }}</td>
                     <td>{{ $product->title }}</td>
-                    <td>{{ $product->description }}</td>
+{{--                    <td>{{ $product->description }}</td>--}}
                     <td>{{ $product->price }}</td>
-                    <td>{{ $product->image }}</td>
+                    <td>
+{{--                        <img src="{{ $product->image }}" alt="{{ $product->title }} " width="100" />--}}
+                        <img src="{{ asset('products/'.$product->image) }}" alt="{{ $product->image }}"
+                             width="100" />
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-secondary">View</a>
+                        <a class="btn btn-sm btn-info">Edit</a>
+                        <a class="btn btn-sm btn-danger">Delete</a>
+                    </td>
                 </tr>
                 @empty
                     <tr>No Products</tr>
@@ -40,6 +49,8 @@
 
                 </tbody>
             </table>
+
+            {{ $products->links() }}
         </div>
     </main>
 @endsection

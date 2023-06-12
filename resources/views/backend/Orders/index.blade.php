@@ -40,6 +40,8 @@
 
                     </tbody>
                 </table>
+
+                {{ $orders->links() }}
             </div>
         </main>
 @endsection
