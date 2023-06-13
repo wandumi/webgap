@@ -27,7 +27,9 @@ Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+Route::get('shop/cart', [ShopController::class, 'cartShow']);
 Route::resource('shop', ShopController::class);
+
 
 /**
 * Backend Routes

@@ -29,9 +29,13 @@
 
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                        <a href="{{ url('shop') }}" class="btn btn-sm btn-outline-secondary">View</a>
+                                        <a href="{{ url('product', $product->id) }}" class="btn btn-sm btn-outline-secondary">View</a>
                                     </div>
-                                    <a href="{{ url('shop') }}" class="btn btn-sm btn-outline-secondary">Buy</a>
+                                    <form action="{{ url('shop') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="productId" value="{{ $product->id }}" />
+                                        <input type="submit" class="btn btn-sm btn-outline-secondary" value="Add Cart"/>
+                                    </form>
                                 </div>
                             </div>
                         </div>

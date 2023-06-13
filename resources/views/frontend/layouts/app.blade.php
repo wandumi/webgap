@@ -1,7 +1,8 @@
 @include('frontend.layouts.includes.topHeader')
 
 
-@include("frontend.layouts.includes.header")
+{{--@include("frontend.layouts.includes.header")--}}
+
 
 @yield('content')
 

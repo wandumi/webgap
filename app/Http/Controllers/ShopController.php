@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ShopController extends Controller
 {
@@ -30,7 +32,12 @@ class ShopController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Cart::create([
+            'product_id' => $request->productId
+        ]);
+
+        return redirect('shop');
+
     }
 
     /**
@@ -63,5 +70,20 @@ class ShopController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public static function cartItems()
+    {
+        return Cart::all()->count();
+    }
+
+    public function cartShow()
+    {
+        $products = DB::table('carts')
+            ->join('products','carts.product_id',  '=', 'products.id')
+            ->select('products')
+            ->get();
+
+        return view('frontend.products.cart', compact('products'));
     }
 }
