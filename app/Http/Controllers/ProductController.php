@@ -6,9 +6,14 @@ use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -41,14 +46,14 @@ class ProductController extends Controller
         }
 
         Product::create([
-            'title'     => $request->title,
-            'price'     => $request->price,
-            'description' => $request->description,
-            'image'   => $fileName
+            'title'         => $request->title,
+            'price'         => $request->price,
+            'description'   => $request->description,
+            'image'         => $fileName
         ]);
 
 
-        return redirect()->back()->with('message','Successfully Submitted');
+        return redirect('admin/products/create')->with('message','Successfully Submitted');
 
     }
 
@@ -65,9 +70,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product = Product::findOrFail($id);
-
-        return view('banner.edit', compact('product'));
+//        dd($product);
+        return view('backend/products/edit', compact('product'));
     }
 
     /**
@@ -75,29 +79,31 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-//        $product = Product::findOrFail($id);
 
         if($request->hasFile('image'))
         {
             if($product->image != null){
 
-                $savedImage = 'banners/'.$product->image;
+                $savedImage = 'products/'.$product->image;
+
+//                dd($savedImage);
 
                 if(File::exists($savedImage)) {
                     File::delete($savedImage);
                 }
 
                 $pageImage      = $request->image;
-                $product         = time() . $pageImage->getClientOriginalName();
-                $pageImage->move(public_path('products/'), $product);
+                $imageName        = time() . $pageImage->getClientOriginalName();
+                $pageImage->move(public_path('products/'), $imageName);
             }
 
+
             $product->update([
-                'image'    => $product,
+                'image'    => $imageName
             ]);
         }
 
-        Product::update([
+        $product->update([
             'title'     => $request->title,
             'price'     => $request->price,
             'description' => $request->description
@@ -112,19 +118,16 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-//        $banner = Banner::findOrFail($id);
 
-        $image  = public_path("banners/") .$product->image;
+        $image  = public_path("products/") .$product->image;
 
         if(File::exists($image)) {
             File::delete($image);
         }
 
-        $image->delete();
+        $product->delete();
 
-        return response()->json([
-            'success' => 'Record deleted successfully!'
-        ]);
+        return redirect("admin/products")->with("message", "Successfully Deleted..");
     }
 
 }

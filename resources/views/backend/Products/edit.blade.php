@@ -3,7 +3,7 @@
 @section('content')
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">Create Product</h1>
+            <h1 class="h2">Edit Product</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group me-2">
                     <a href="{{ url('admin/products') }}" class="btn btn-sm btn-secondary">Back</a>
@@ -17,13 +17,16 @@
             @if(session()->has('message'))
                 <div class="alert alert-success">{{ session('message') }}</div>
             @endif
-            <form id="products" action="{{ url('admin/products') }}" method="post" enctype="multipart/form-data">
+            <form id="products" action="{{ url('admin/products', $product->id ) }}" method="post" enctype="multipart/form-data">
                 @csrf
+{{--                @method('PATCH')--}}
+
+                {{ method_field('PUT') }}
 
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
                     <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" id="title"
-                           value="{{ old('title') }}" />
+                           value="{{ $product->title }}" />
                     @error('title')
                     <div class="invalid-feedback" > {{ $message }}</div>
                     @enderror
@@ -32,7 +35,7 @@
                 <div class="mb-3">
                     <label for="price" class="form-label">Price</label>
                     <input type="text" name="price" class="form-control @error('price') is-invalid @enderror"
-                            id="price"  value="{{ old('price') }}" />
+                           id="price"  value="{{ $product->price }}" />
                     @error('price')
                     <div class="invalid-feedback"> {{ $message }}</div>
                     @enderror
@@ -40,6 +43,8 @@
 
                 <div class="mb-3">
                     <label for="image">Upload Image</label>
+                    <img class="form-control" src="{{ asset('products/'.$product->image) }}" alt="{{ $product->image }}"
+                         width="100" />
                     <input type="file"
                            class="form-control @error('image') is-invalid @enderror" name="image" id="image"  value="{{ old('image') }}" />
                     @error('image')
@@ -49,7 +54,7 @@
 
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
-                    <textarea class="form-control" name="description" id="description"></textarea>
+                    <textarea class="form-control" name="description" id="description">{{ $product->description }}</textarea>
                 </div>
 
                 <div class="d-grid">

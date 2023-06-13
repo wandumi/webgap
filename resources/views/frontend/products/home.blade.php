@@ -20,7 +20,7 @@
                     @foreach($products as $product)
                     <div class="col">
                         <div class="card shadow-sm">
-                            <img src="{{ $product->image }}" alt="{{ $product->title }}" />
+                            <img src="{{ asset('products/'.$product->image) }}" alt="{{ $product->title }}" />
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <p class="card-text">{{ $product->title }}</p>

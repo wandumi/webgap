@@ -5,7 +5,7 @@ use App\Http\Controllers\LinkController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\HomeController;
-use App\Models\Product;
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,4 +39,5 @@ Route::prefix('admin')->group(function () {
     Route::resource("products", ProductController::class);
     Route::resource("links", LinkController::class);
     Route::resource("orders", OrderController::class);
+    Route::resource('users', UsersController::class);
 });
